@@ -1,4 +1,4 @@
-package flab.gotable.Repository;
+package flab.gotable.repository;
 
 import flab.gotable.dto.request.MemberSignUpRequestDto;
 import org.apache.ibatis.annotations.Mapper;

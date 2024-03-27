@@ -13,7 +13,7 @@ public class MemberSignUpRequestDto {
     private String name;
 
     @NotBlank(message = "아이디는 필수 입력 값 입니다.")
-    @Pattern(regexp = "[a-zA-Z0-9]{2,9}",
+    @Pattern(regexp = "[a-zA-Z0-9]{4,12}",
             message = "아이디는 영문, 숫자만 가능하며 4 ~ 12자리여야 합니다.")
     private String id;
 

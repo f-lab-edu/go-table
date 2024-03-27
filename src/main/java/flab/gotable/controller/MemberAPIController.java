@@ -1,8 +1,8 @@
 package flab.gotable.controller;
 
 import flab.gotable.dto.request.MemberSignUpRequestDto;
-import flab.gotable.dto.response.MemberSignUpResponseDto;
 import flab.gotable.service.MemberService;
+import flab.gotable.utils.ResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,9 +18,10 @@ public class MemberAPIController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MemberSignUpResponseDto> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
+    public ResponseEntity<ResponseDto> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
         memberService.signUp(memberSignUpRequestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        ResponseDto res = new ResponseDto(HttpStatus.OK, "SUCCESS");
+        return new ResponseEntity<>(res, res.getHttpStatus());
     }
 }

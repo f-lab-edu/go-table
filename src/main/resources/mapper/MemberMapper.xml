@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="flab.gotable.Repository.MemberRepository">
+<mapper namespace="flab.gotable.repository.MemberRepository">
     <insert id="saveMember" parameterType="flab.gotable.dto.request.MemberSignUpRequestDto">
         INSERT INTO member
         (SEQ, NAME, ID, PASSWORD, PHONE)

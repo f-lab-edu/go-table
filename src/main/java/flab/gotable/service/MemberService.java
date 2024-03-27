@@ -2,7 +2,7 @@ package flab.gotable.service;
 
 import flab.gotable.domain.entity.Member;
 import flab.gotable.dto.request.MemberSignUpRequestDto;
-import flab.gotable.Repository.MemberRepository;
+import flab.gotable.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
