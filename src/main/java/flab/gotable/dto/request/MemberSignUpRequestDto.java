@@ -1,11 +1,11 @@
-package flab.gotable.member.dto.request;
+package flab.gotable.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
+@NoArgsConstructor
 @Getter
-@RequiredArgsConstructor
 @ToString
 public class MemberSignUpRequestDto {
 
@@ -25,8 +25,4 @@ public class MemberSignUpRequestDto {
     @NotBlank(message = "전화번호는 필수 입력 값 입니다.")
     @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$" , message = "전화번호 형식은 010-0000-0000입니다.")
     private String phone;
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

@@ -1,8 +1,8 @@
-package flab.gotable.member.controller;
+package flab.gotable.controller;
 
-import flab.gotable.member.dto.request.MemberSignUpRequestDto;
-import flab.gotable.member.dto.response.MemberSignUpResponseDto;
-import flab.gotable.member.service.MemberService;
+import flab.gotable.dto.request.MemberSignUpRequestDto;
+import flab.gotable.dto.response.MemberSignUpResponseDto;
+import flab.gotable.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

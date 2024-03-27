@@ -1,4 +1,4 @@
-package flab.gotable.member.dto.response;
+package flab.gotable.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

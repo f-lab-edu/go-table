@@ -1,4 +1,4 @@
-package flab.gotable.member.controller;
+package flab.gotable.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
