@@ -4,7 +4,7 @@
 <mapper namespace="flab.gotable.repository.MemberRepository">
     <insert id="saveMember" parameterType="flab.gotable.dto.request.MemberSignUpRequestDto">
         INSERT INTO member
-        (SEQ, NAME, ID, PASSWORD, PHONE)
-        VALUES(NULL, #{name}, #{id}, #{password}, #{phone})
+        (NAME, ID, PASSWORD, PHONE)
+        VALUES(#{name}, #{id}, #{password}, #{phone})
     </insert>
 </mapper>
