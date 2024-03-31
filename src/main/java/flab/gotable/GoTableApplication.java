@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 import java.util.*;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication
 public class GoTableApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GoTableApplication.class, args);
