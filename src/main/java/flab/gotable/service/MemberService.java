@@ -19,4 +19,8 @@ public class MemberService {
 
         memberMapper.saveMember(member);
     }
+
+    public boolean isDuplicatedId(String id) {
+        return memberMapper.existId(id);
+    }
 }

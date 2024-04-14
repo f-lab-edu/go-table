@@ -8,4 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface MemberMapper {
     @Transactional
     public void saveMember(Member member);
+
+    public boolean existId(String id);
 }

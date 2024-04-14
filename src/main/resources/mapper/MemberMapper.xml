@@ -7,4 +7,10 @@
         (NAME, ID, PASSWORD, PHONE)
         VALUES(#{name}, #{id}, #{password}, #{phone})
     </insert>
+
+    <select id="existId" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM member
+        WHERE ID = #{id}
+    </select>
 </mapper>
