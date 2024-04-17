@@ -1,6 +1,9 @@
 package flab.gotable.controller;
 
+import flab.gotable.dto.MemberResponse;
 import flab.gotable.dto.request.MemberSignUpRequestDto;
+import flab.gotable.exception.DuplicatedIdException;
+import flab.gotable.exception.ErrorCode;
 import flab.gotable.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,15 +21,17 @@ public class MemberAPIController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<HttpStatus> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
+    public ResponseEntity<MemberResponse> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
         boolean isDuplicated = memberService.isDuplicatedId(memberSignUpRequestDto.getId());
 
-        if(isDuplicated) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (isDuplicated) {
+            throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
+
         memberService.signUp(memberSignUpRequestDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(MemberResponse.ok(memberSignUpRequestDto, "회원가입 성공"));
     }
 
     @GetMapping("/duplicated/{id}")
@@ -34,7 +39,7 @@ public class MemberAPIController {
         boolean isDuplicated = memberService.isDuplicatedId(id);
 
         if (isDuplicated) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();
