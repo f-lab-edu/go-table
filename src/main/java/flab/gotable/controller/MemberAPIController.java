@@ -22,9 +22,7 @@ public class MemberAPIController {
 
     @PostMapping("/signup")
     public ResponseEntity<MemberResponse> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
-        boolean isDuplicated = memberService.isDuplicatedId(memberSignUpRequestDto.getId());
-
-        if (isDuplicated) {
+        if (memberService.isDuplicatedId(memberSignUpRequestDto.getId())) {
             throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
 
