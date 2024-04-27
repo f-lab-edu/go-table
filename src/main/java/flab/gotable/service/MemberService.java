@@ -18,8 +18,6 @@ public class MemberService {
     @Transactional
     public void signUp(MemberSignUpRequestDto memberSignUpRequestDto) {
         Member member = memberSignUpRequestDto.toEntity(memberSignUpRequestDto, passwordEncoder.encode(memberSignUpRequestDto.getPassword()));
-        member.setPassword(member.getPassword());
-
         memberMapper.saveMember(member);
     }
 
