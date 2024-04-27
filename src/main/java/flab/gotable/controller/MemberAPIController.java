@@ -1,6 +1,6 @@
 package flab.gotable.controller;
 
-import flab.gotable.dto.MemberResponse;
+import flab.gotable.dto.ApiResponse;
 import flab.gotable.dto.request.MemberSignUpRequestDto;
 import flab.gotable.exception.DuplicatedIdException;
 import flab.gotable.exception.ErrorCode;
@@ -21,7 +21,7 @@ public class MemberAPIController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberResponse> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
+    public ResponseEntity<ApiResponse> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
         if (memberService.isDuplicatedId(memberSignUpRequestDto.getId())) {
             throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
@@ -29,14 +29,12 @@ public class MemberAPIController {
         memberService.signUp(memberSignUpRequestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(MemberResponse.ok(memberSignUpRequestDto, "회원가입 성공"));
+                .body(ApiResponse.ok(memberSignUpRequestDto, "회원가입 성공"));
     }
 
     @GetMapping("/duplicated/{id}")
     public ResponseEntity<HttpStatus> isDuplicatedEmail(@PathVariable("id") String id) {
-        boolean isDuplicated = memberService.isDuplicatedId(id);
-
-        if (isDuplicated) {
+        if (memberService.isDuplicatedId(id)) {
             throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
 

@@ -28,12 +28,12 @@ public class MemberSignUpRequestDto {
     @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{4})-\\d{4}$" , message = "전화번호 형식은 010-0000-0000입니다.")
     private String phone;
 
-    public static Member toEntity(MemberSignUpRequestDto memberSignUpRequestDto, PasswordEncoder passwordEncoder) {
+    public static Member toEntity(MemberSignUpRequestDto memberSignUpRequestDto, String password) {
         Member member = new Member();
 
         member.setName(memberSignUpRequestDto.getName());
         member.setId(memberSignUpRequestDto.getId());
-        member.setPassword(passwordEncoder.encode(memberSignUpRequestDto.getPassword()));
+        member.setPassword(password);
         member.setPhone(memberSignUpRequestDto.getPhone());
 
         return member;

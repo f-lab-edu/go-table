@@ -1,7 +1,6 @@
 package flab.gotable.exception;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import flab.gotable.dto.MemberResponse;
+import flab.gotable.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -20,15 +19,15 @@ import java.util.Map;
 public class ExceptionController {
 
     @ExceptionHandler(DuplicatedIdException.class)
-    public ResponseEntity<MemberResponse> handleDuplicatedIdException(DuplicatedIdException e) {
+    public ResponseEntity<ApiResponse> handleDuplicatedIdException(DuplicatedIdException e) {
         log.error("handleDuplicatedIdException", e);
 
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-                .body(MemberResponse.fail(e.getMessage()));
+                .body(ApiResponse.fail(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MemberResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
 
         BindingResult bindingResult = e.getBindingResult();
@@ -39,7 +38,7 @@ public class ExceptionController {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(MemberResponse.fail(new JSONObject(map).toString()));
+                .body(ApiResponse.fail(new JSONObject(map).toString()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,7 +46,7 @@ public class ExceptionController {
         log.error("handleException", e);
 
         return ResponseEntity.status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
-                .body(MemberResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()));
+                .body(ApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()));
 
     }
 }
