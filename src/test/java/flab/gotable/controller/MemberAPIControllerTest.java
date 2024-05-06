@@ -76,4 +76,14 @@ class MemberAPIControllerTest {
         // Then
         Assertions.assertThrows(DuplicatedIdException.class, () -> memberAPIController.signup(new MemberSignUpRequestDto("오소영", "sozero", "q1w2e3r4", "010-1111-2222")));
     }
+
+    @Test
+    @DisplayName("회원가입에 성공할 경우 201 Created를 반환한다.")
+    void signupSuccess() {
+        // given
+        ResponseEntity<ApiResponse> result = memberAPIController.signup(new MemberSignUpRequestDto("제로영", "zero0", "q1w2e3r4", "010-1111-2222"));
+
+        // then
+        Assertions.assertEquals(HttpStatus.CREATED, result.getStatusCode());
+    }
 }
