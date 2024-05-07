@@ -33,7 +33,7 @@ public class MemberAPIController {
     }
 
     @GetMapping("/duplicated/{id}")
-    public ResponseEntity<HttpStatus> isDuplicatedEmail(@PathVariable("id") String id) {
+    public ResponseEntity<HttpStatus> isDuplicatedId(@PathVariable("id") String id) {
         if (memberService.isDuplicatedId(id)) {
             throw new DuplicatedIdException(ErrorCode.DUPLICATED_ID, ErrorCode.DUPLICATED_ID.getMessage());
         }
