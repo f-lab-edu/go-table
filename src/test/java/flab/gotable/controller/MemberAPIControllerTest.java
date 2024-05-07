@@ -23,10 +23,11 @@ class MemberAPIControllerTest {
 
     @BeforeEach
     void setup() {
-        Map<String, Member> memberMap = new HashMap<>();
+        
 
         memberAPIController = new MemberAPIController(
-                new MemberService(new MemberMapper() {
+          new MemberService(new MemberMapper() {
+            final Map<String, Member> memberMap = new HashMap<>();
                     @Override
                     public void saveMember(Member member) {
                         memberMap.put(member.getId(), member);
