@@ -1,9 +1,13 @@
 package flab.gotable.controller;
 
+import flab.gotable.domain.entity.Member;
 import flab.gotable.dto.ApiResponse;
+import flab.gotable.dto.request.MemberLoginRequestDto;
 import flab.gotable.dto.request.MemberSignUpRequestDto;
 import flab.gotable.exception.DuplicatedIdException;
 import flab.gotable.exception.ErrorCode;
+import flab.gotable.exception.MemberNotFoundException;
+import flab.gotable.service.LoginService;
 import flab.gotable.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberAPIController {
 
     private final MemberService memberService;
+    private final LoginService loginService;
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> signup(@RequestBody @Valid MemberSignUpRequestDto memberSignUpRequestDto) {
@@ -39,5 +44,16 @@ public class MemberAPIController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse> login(@RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto) {
+        if(!memberService.findMemberByIdAndPassword(memberLoginRequestDto)) {
+            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND_PASSWORD, ErrorCode.MEMBER_NOT_FOUND_PASSWORD.getMessage());
+        }
+
+        loginService.login(memberLoginRequestDto.getId());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.ok(memberLoginRequestDto, "로그인 성공"));
     }
 }

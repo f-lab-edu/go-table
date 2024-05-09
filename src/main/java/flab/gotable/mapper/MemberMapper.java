@@ -10,4 +10,6 @@ public interface MemberMapper {
     public void saveMember(Member member);
 
     public boolean existId(String id);
+
+    public Member findMemberById(String id);
 }

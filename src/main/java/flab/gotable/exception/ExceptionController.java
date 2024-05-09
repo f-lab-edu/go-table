@@ -26,6 +26,14 @@ public class ExceptionController {
                 .body(ApiResponse.fail(e.getMessage()));
     }
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleMemberNotFoundException(MemberNotFoundException e) {
+        log.error("handleMemberNotFoundException", e);
+
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                .body(ApiResponse.fail(e.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
