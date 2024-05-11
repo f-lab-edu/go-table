@@ -56,4 +56,11 @@ public class MemberAPIController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.ok(memberLoginRequestDto, "로그인 성공"));
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<ApiResponse> logout() {
+        loginService.logout();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.ok(null, "로그아웃 성공"));
+    }
 }
