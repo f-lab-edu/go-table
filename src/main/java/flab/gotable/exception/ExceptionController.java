@@ -34,6 +34,14 @@ public class ExceptionController {
                 .body(ApiResponse.fail(e.getMessage()));
     }
 
+    @ExceptionHandler(UnAuthenticatedException.class)
+    public ResponseEntity<ApiResponse> handleMemberUnAuthenticatedException(UnAuthenticatedException e) {
+        log.error("handleMemberUnAuthenticatedException", e);
+
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                .body(ApiResponse.fail(e.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("handleMethodArgumentNotValidException", e);
