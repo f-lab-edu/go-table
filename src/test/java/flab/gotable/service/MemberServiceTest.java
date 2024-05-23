@@ -22,7 +22,7 @@ class MemberServiceTest {
     @BeforeEach
     void setup() {
         memberService = new MemberService(new MemberMapper() {
-            private Map<String, Member> memberMap = new HashMap<>();
+            private final Map<String, Member> memberMap = new HashMap<>();
 
             @Override
             public void saveMember(Member member) {

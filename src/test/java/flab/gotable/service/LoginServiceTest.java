@@ -1,6 +1,5 @@
 package flab.gotable.service;
 
-import flab.gotable.domain.entity.Member;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,7 @@ class LoginServiceTest {
     void setup() {
         loginService = new LoginService(
                 httpSession = new HttpSession() {
-                    private Map<String, Object> sessionMap = new HashMap<>();
+                    private final Map<String, Object> sessionMap = new HashMap<>();
                     @Override
                     public long getCreationTime() {
                         return 0;
@@ -107,6 +106,6 @@ class LoginServiceTest {
         loginService.logout();
 
         // then
-        Assertions.assertEquals(null, httpSession.getAttribute(MEMBER_ID));
+        Assertions.assertNull(httpSession.getAttribute(MEMBER_ID));
     }
 }
