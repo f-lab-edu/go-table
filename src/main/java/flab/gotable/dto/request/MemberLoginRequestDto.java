@@ -19,4 +19,9 @@ public class MemberLoginRequestDto {
     @NotBlank(message = "비밀번호는 필수 입력 값 입니다.")
     @Size(max=30, message = "비밀번호는 최대 30자리까지 입력 가능합니다.")
     private String password;
+
+    public MemberLoginRequestDto(String id, String password) {
+        this.id = id;
+        this.password = password;
+    }
 }
