@@ -33,11 +33,7 @@ public class MemberService {
     public boolean findMemberByIdAndPassword(MemberLoginRequestDto memberLoginRequestDto) {
         Member member = findMemberById(memberLoginRequestDto.getId());
 
-        if(passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword())) {
-            return true;
-        } else {
-            return false;
-        }
+        return passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword())
     }
 
     @Transactional
