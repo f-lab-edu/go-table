@@ -8,16 +8,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-    private final HttpSession httpSession;
     public static final String MEMBER_ID = "MEMBER_ID";
 
     @Transactional
-    public void login(String id) {
+    public void login(String id, HttpSession httpSession) {
         httpSession.setAttribute(MEMBER_ID, id);
     }
 
     @Transactional
-    public void logout() {
+    public void logout(HttpSession httpSession) {
         httpSession.removeAttribute(MEMBER_ID);
     }
 }
