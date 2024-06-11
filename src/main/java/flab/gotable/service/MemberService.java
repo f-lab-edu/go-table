@@ -30,18 +30,16 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean findMemberByIdAndPassword(MemberLoginRequestDto memberLoginRequestDto) {
+    public boolean isvalidMember(MemberLoginRequestDto memberLoginRequestDto) {
+
         Member member = findMemberById(memberLoginRequestDto.getId());
 
-        if(passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword())) {
-            return true;
-        } else {
-            return false;
-        }
+        return passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword());
     }
 
     @Transactional
     public Member findMemberById(String id) {
+
         if(!memberMapper.existId(id)) {
             throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND_ID, ErrorCode.MEMBER_NOT_FOUND_ID.getMessage());
         }
