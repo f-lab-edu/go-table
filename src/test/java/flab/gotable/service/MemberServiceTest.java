@@ -14,8 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MemberServiceTest {
     private MemberService memberService;
 
@@ -119,7 +117,7 @@ class MemberServiceTest {
         memberService.signUp(new MemberSignUpRequestDto("제로영", "sozero", "q1w2e3r4", "010-1234-5678"));
 
         // when
-        boolean isExistMember = memberService.findMemberByIdAndPassword(new MemberLoginRequestDto("sozero", "q1w2e3r4"));
+        boolean isExistMember = memberService.isvalidMember(new MemberLoginRequestDto("sozero", "q1w2e3r4"));
 
         // then
         Assertions.assertTrue(isExistMember);
@@ -132,7 +130,7 @@ class MemberServiceTest {
         memberService.signUp(new MemberSignUpRequestDto("제로영", "sozero", "q1w2e3r4", "010-1234-5678"));
 
         // when
-        boolean isExistMember = memberService.findMemberByIdAndPassword(new MemberLoginRequestDto("sozero", "r5t6y7u8"));
+        boolean isExistMember = memberService.isvalidMember(new MemberLoginRequestDto("sozero", "r5t6y7u8"));
 
         // then
         Assertions.assertFalse(isExistMember);
