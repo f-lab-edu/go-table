@@ -13,4 +13,10 @@
         FROM member
         WHERE ID = #{id}
     </select>
+
+    <select id="findMemberById" resultType="flab.gotable.domain.entity.Member">
+        SELECT seq, name, id, password, phone
+        FROM member
+        WHERE ID = #{id}
+    </select>
 </mapper>

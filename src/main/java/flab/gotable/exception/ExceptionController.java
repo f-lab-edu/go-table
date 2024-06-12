@@ -1,8 +1,9 @@
 package flab.gotable.exception;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import flab.gotable.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,16 +19,22 @@ import java.util.Map;
 @Slf4j
 public class ExceptionController {
 
-    @ExceptionHandler(DuplicatedIdException.class)
-    public ResponseEntity<ApiResponse> handleDuplicatedIdException(DuplicatedIdException e) {
-        log.error("handleDuplicatedIdException", e);
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    @ExceptionHandler({
+            DuplicatedIdException.class,
+            MemberNotFoundException.class,
+            UnAuthenticatedException.class,
+    })
+    public ResponseEntity<ApiResponse> handleApplicationException(ApplicationException e) {
+        log.error("handle" + e.getClass());
 
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(ApiResponse.fail(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) throws JsonProcessingException{
         log.error("handleMethodArgumentNotValidException", e);
 
         BindingResult bindingResult = e.getBindingResult();
@@ -38,7 +45,7 @@ public class ExceptionController {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.fail(new JSONObject(map).toString()));
+                .body(ApiResponse.fail(objectMapper.writeValueAsString(map)));
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,6 +54,5 @@ public class ExceptionController {
 
         return ResponseEntity.status(ErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
                 .body(ApiResponse.fail(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()));
-
     }
 }

@@ -1,7 +1,10 @@
 package flab.gotable.service;
 
 import flab.gotable.domain.entity.Member;
+import flab.gotable.dto.request.MemberLoginRequestDto;
 import flab.gotable.dto.request.MemberSignUpRequestDto;
+import flab.gotable.exception.ErrorCode;
+import flab.gotable.exception.MemberNotFoundException;
 import flab.gotable.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,5 +27,23 @@ public class MemberService {
     @Transactional(readOnly = true)
     public boolean isDuplicatedId(String id) {
         return memberMapper.existId(id);
+    }
+
+    @Transactional
+    public boolean isValidMember(MemberLoginRequestDto memberLoginRequestDto) {
+
+        Member member = findMemberById(memberLoginRequestDto.getId());
+
+        return passwordEncoder.matches(memberLoginRequestDto.getPassword(), member.getPassword());
+    }
+
+    @Transactional
+    public Member findMemberById(String id) {
+
+        if(!memberMapper.existId(id)) {
+            throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND_ID, ErrorCode.MEMBER_NOT_FOUND_ID.getMessage());
+        }
+
+        return memberMapper.findMemberById(id);
     }
 }
