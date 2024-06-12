@@ -25,7 +25,7 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if(SecurityUtils.hasAuthentication(request) == null) {
+        if(SecurityUtils.hasAuthentication(request) == false) {
             throw new UnAuthenticatedException(ErrorCode.MEMBER_UNAUTHENTICATED, ErrorCode.MEMBER_UNAUTHENTICATED.getMessage());
         }
 
