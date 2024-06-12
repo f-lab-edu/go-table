@@ -117,7 +117,7 @@ class MemberServiceTest {
         memberService.signUp(new MemberSignUpRequestDto("제로영", "sozero", "q1w2e3r4", "010-1234-5678"));
 
         // when
-        boolean isExistMember = memberService.isvalidMember(new MemberLoginRequestDto("sozero", "q1w2e3r4"));
+        boolean isExistMember = memberService.isValidMember(new MemberLoginRequestDto("sozero", "q1w2e3r4"));
 
         // then
         Assertions.assertTrue(isExistMember);
@@ -130,7 +130,7 @@ class MemberServiceTest {
         memberService.signUp(new MemberSignUpRequestDto("제로영", "sozero", "q1w2e3r4", "010-1234-5678"));
 
         // when
-        boolean isExistMember = memberService.isvalidMember(new MemberLoginRequestDto("sozero", "r5t6y7u8"));
+        boolean isExistMember = memberService.isValidMember(new MemberLoginRequestDto("sozero", "r5t6y7u8"));
 
         // then
         Assertions.assertFalse(isExistMember);

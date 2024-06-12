@@ -30,7 +30,7 @@ public class MemberService {
     }
 
     @Transactional
-    public boolean isvalidMember(MemberLoginRequestDto memberLoginRequestDto) {
+    public boolean isValidMember(MemberLoginRequestDto memberLoginRequestDto) {
 
         Member member = findMemberById(memberLoginRequestDto.getId());
 

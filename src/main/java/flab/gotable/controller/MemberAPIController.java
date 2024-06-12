@@ -53,7 +53,7 @@ public class MemberAPIController {
     * */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody @Valid MemberLoginRequestDto memberLoginRequestDto, HttpSession httpSession) {
-        if(!memberService.isvalidMember(memberLoginRequestDto)) {
+        if(!memberService.isValidMember(memberLoginRequestDto)) {
             throw new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND_PASSWORD, ErrorCode.MEMBER_NOT_FOUND_PASSWORD.getMessage());
         }
 
