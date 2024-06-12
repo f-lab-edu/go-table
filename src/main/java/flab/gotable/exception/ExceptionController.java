@@ -19,6 +19,8 @@ import java.util.Map;
 @Slf4j
 public class ExceptionController {
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @ExceptionHandler({
             DuplicatedIdException.class,
             MemberNotFoundException.class,
@@ -43,7 +45,7 @@ public class ExceptionController {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ApiResponse.fail(new ObjectMapper().writeValueAsString(map)));
+                .body(ApiResponse.fail(objectMapper.writeValueAsString(map)));
     }
 
     @ExceptionHandler(Exception.class)
