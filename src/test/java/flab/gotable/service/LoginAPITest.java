@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class LoginServiceTest {
+class LoginAPITest {
 
     private MockHttpSession session;
 
