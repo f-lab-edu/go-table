@@ -20,10 +20,7 @@ public class StoreService {
 
     @Transactional
     public boolean getStoreById(Long id) {
-        if(storeMapper.findStoreById(id) == null) {
-            return false;
-        }
-        return true;
+        return storeMapper.findStoreById(id) != null;
     }
 
     @Transactional
@@ -81,9 +78,10 @@ public class StoreService {
             availableDays.put(targetDate.toString(), dayInfo);
         }
 
+        store.setAvailableDays(availableDays);
+
         Map<String, Object> result = new HashMap<>();
         result.put("store", store);
-        result.put("availableDays", availableDays);
 
         return result;
     }
