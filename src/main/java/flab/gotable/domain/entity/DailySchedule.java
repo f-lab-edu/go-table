@@ -13,4 +13,11 @@ public class DailySchedule {
     private String openTime;
     private String closeTime;
     private String splitTime;
+
+    public DailySchedule(String day, String openTime, String closeTime, String splitTime) {
+        this.day = day;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.splitTime = splitTime;
+    }
 }

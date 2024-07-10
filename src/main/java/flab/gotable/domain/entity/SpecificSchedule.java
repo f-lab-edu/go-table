@@ -15,4 +15,11 @@ public class SpecificSchedule {
     private String openTime;
     private String closeTime;
     private String splitTime;
+
+    public SpecificSchedule(LocalDate date, String openTime, String closeTime, String splitTime) {
+        this.date = date;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.splitTime = splitTime;
+    }
 }
