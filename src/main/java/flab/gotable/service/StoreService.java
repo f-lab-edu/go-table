@@ -79,11 +79,31 @@ public class StoreService {
         }
 
         store.setAvailableDays(availableDays);
+        store.setOpenSchedule(calculateOpenSchedule(dailySchedules));
 
         Map<String, Object> result = new HashMap<>();
         result.put("store", store);
 
         return result;
+    }
+
+    private String calculateOpenSchedule(List<DailySchedule> dailySchedules) {
+        StringBuilder openSchedule = new StringBuilder();
+
+        for (DailySchedule schedule : dailySchedules) {
+            openSchedule.append(schedule.getDay())
+                    .append(" ")
+                    .append(schedule.getOpenTime())
+                    .append(" ~ ")
+                    .append(schedule.getCloseTime())
+                    .append(", ");
+        }
+
+        if (openSchedule.length() > 0) {
+            openSchedule.setLength(openSchedule.length() - 2);
+        }
+
+        return openSchedule.toString();
     }
 
     private List<String> calculateSelectableTimes(WorkSchedule workSchedule, String splitTime) {

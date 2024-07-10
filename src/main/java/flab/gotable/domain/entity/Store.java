@@ -15,5 +15,6 @@ public class Store {
     private String address;
     private int maxMemberCount;
     private int maxAvailableDay;
+    private String openSchedule;
     private Map<String, Object> availableDays;
 }
