@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @NoArgsConstructor
 @Getter
@@ -12,11 +13,11 @@ import java.time.LocalDate;
 public class SpecificSchedule {
     private Long id;
     private LocalDate date;
-    private String openTime;
-    private String closeTime;
+    private LocalTime openTime;
+    private LocalTime closeTime;
     private String splitTime;
 
-    public SpecificSchedule(LocalDate date, String openTime, String closeTime, String splitTime) {
+    public SpecificSchedule(LocalDate date, LocalTime openTime, LocalTime closeTime, String splitTime) {
         this.date = date;
         this.openTime = openTime;
         this.closeTime = closeTime;
