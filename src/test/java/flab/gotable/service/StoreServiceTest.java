@@ -1,8 +1,10 @@
 package flab.gotable.service;
 
 import flab.gotable.domain.entity.DailySchedule;
+import flab.gotable.domain.entity.DayInfo;
 import flab.gotable.domain.entity.SpecificSchedule;
 import flab.gotable.domain.entity.Store;
+import flab.gotable.dto.response.StoreDetailsResponseDto;
 import flab.gotable.mapper.StoreMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -39,8 +42,8 @@ public class StoreServiceTest {
             public List<DailySchedule> findDailyScheduleByStoreId(Long id) {
                 if (id == 1L) {
                     return Arrays.asList(
-                            new DailySchedule("MONDAY", "09:00", "18:00", "60"),
-                            new DailySchedule("TUESDAY", "09:00", "18:00", "60")
+                            new DailySchedule("MONDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60"),
+                            new DailySchedule("TUESDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60")
                     );
                 }
                 return Collections.emptyList();
@@ -50,7 +53,7 @@ public class StoreServiceTest {
             public List<SpecificSchedule> findSpecificScheduleByStoreId(Long id) {
                 if (id == 1L) {
                     return Arrays.asList(
-                            new SpecificSchedule(LocalDate.of(2024, 7, 12), "10:00", "15:00", "60")
+                            new SpecificSchedule(LocalDate.of(2024, 7, 12), LocalTime.parse("10:00"), LocalTime.parse("15:00"), "60")
                     );
                 }
                 return Collections.emptyList();
@@ -65,7 +68,7 @@ public class StoreServiceTest {
         Long storeId = 1L;
 
         // when
-        boolean result = storeService.getStoreById(storeId);
+        boolean result = storeService.existById(storeId);
 
         // then
         Assertions.assertTrue(result);
@@ -78,7 +81,7 @@ public class StoreServiceTest {
         Long storeId = 2L;
 
         // when
-        boolean result = storeService.getStoreById(storeId);
+        boolean result = storeService.existById(storeId);
 
         // then
         Assertions.assertFalse(result);
@@ -92,30 +95,28 @@ public class StoreServiceTest {
         Long storeId = 1L;
 
         // when
-        Map<String, Object> result = storeService.getStoreDetail(storeId);
+        StoreDetailsResponseDto result = storeService.getStoreDetail(storeId);
 
         // then
         Assertions.assertNotNull(result);
 
-        Store store = (Store) result.get("store");
-        Assertions.assertNotNull(store);
-        Assertions.assertEquals(storeId, store.getId());
-        Assertions.assertEquals("차알 엘지아트센터 서울점", store.getName());
-        Assertions.assertEquals("서울 강서구 마곡중앙로 136 지하1층", store.getAddress());
-        Assertions.assertEquals(8, store.getMaxMemberCount());
-        Assertions.assertEquals(7, store.getMaxAvailableDay());
+        Assertions.assertEquals(storeId, result.getId());
+        Assertions.assertEquals("차알 엘지아트센터 서울점", result.getName());
+        Assertions.assertEquals("서울 강서구 마곡중앙로 136 지하1층", result.getAddress());
+        Assertions.assertEquals(8, result.getMaxMemberCount());
+        Assertions.assertEquals(7, result.getMaxAvailableDay());
 
         String expectedOpenSchedule = "MONDAY 09:00 ~ 18:00, TUESDAY 09:00 ~ 18:00";
-        Assertions.assertEquals(expectedOpenSchedule, store.getOpenSchedule());
+        Assertions.assertEquals(expectedOpenSchedule, result.getOpenSchedule());
 
-        Map<String, Object> availableDays = store.getAvailableDays();
+        Map<String, DayInfo> availableDays = result.getAvailableDays();
         Assertions.assertNotNull(availableDays);
         Assertions.assertTrue(availableDays.containsKey("2024-07-12"));
 
-        Map<String, Object> dayInfo = (Map<String, Object>) availableDays.get("2024-07-12");
+        DayInfo dayInfo = availableDays.get("2024-07-12");
         Assertions.assertNotNull(dayInfo);
 
-        List<String> selectableTimes = (List<String>) dayInfo.get("selectableTimes");
+        List<String> selectableTimes = dayInfo.getSelectableTimes();
         Assertions.assertNotNull(selectableTimes);
         Assertions.assertEquals(Arrays.asList("10:00", "11:00", "12:00", "13:00", "14:00"), selectableTimes);
     }

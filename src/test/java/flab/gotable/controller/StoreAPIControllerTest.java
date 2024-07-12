@@ -4,6 +4,7 @@ import flab.gotable.domain.entity.DailySchedule;
 import flab.gotable.domain.entity.SpecificSchedule;
 import flab.gotable.domain.entity.Store;
 import flab.gotable.dto.ApiResponse;
+import flab.gotable.dto.response.StoreDetailsResponseDto;
 import flab.gotable.exception.StoreNotFoundException;
 import flab.gotable.mapper.StoreMapper;
 import flab.gotable.service.StoreService;
@@ -12,10 +13,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class StoreAPIControllerTest {
     private StoreAPIController storeAPIController;
@@ -44,8 +47,8 @@ public class StoreAPIControllerTest {
                             public List<DailySchedule> findDailyScheduleByStoreId(Long id) {
                                 if (id == 1L) {
                                     return Arrays.asList(
-                                            new DailySchedule("MONDAY", "09:00", "18:00", "60"),
-                                            new DailySchedule("TUESDAY", "09:00", "18:00", "60")
+                                            new DailySchedule("MONDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60"),
+                                            new DailySchedule("TUESDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60")
                                     );
                                 }
                                 return Collections.emptyList();
@@ -55,7 +58,7 @@ public class StoreAPIControllerTest {
                             public List<SpecificSchedule> findSpecificScheduleByStoreId(Long id) {
                                 if (id == 1L) {
                                     return Arrays.asList(
-                                            new SpecificSchedule(LocalDate.of(2024, 7, 12), "10:00", "15:00", "60")
+                                            new SpecificSchedule(LocalDate.of(2024, 7, 12), LocalTime.parse("10:00"), LocalTime.parse("15:00"), "60")
                                     );
                                 }
                                 return Collections.emptyList();
@@ -66,16 +69,19 @@ public class StoreAPIControllerTest {
     }
 
     @Test
-    @DisplayName("식당 조회에 성공할 경우 200 OK를 반환한다.")
+    @DisplayName("식당 조회에 성공할 경우 ApiResponse 객체가 반환한다.")
     void getStoreDetailSuccess() {
         // given
         Long storeId = 1L;
 
         // when
-        ResponseEntity<ApiResponse> response = storeAPIController.getStoreDetail(storeId);
+        ApiResponse<StoreDetailsResponseDto> response = storeAPIController.getStoreDetail(storeId);
 
         // then
-        Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(response);
+        Assertions.assertEquals("식당 상세 조회 성공", response.getMessage());
+        Assertions.assertNotNull(response.getData());
+        Assertions.assertEquals(storeId, response.getData().getId());
     }
 
     @Test
