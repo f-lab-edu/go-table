@@ -1,9 +1,9 @@
 package flab.gotable.service;
 
-import flab.gotable.domain.entity.DailySchedule;
-import flab.gotable.domain.entity.SpecificSchedule;
-import flab.gotable.domain.entity.Store;
-import flab.gotable.domain.entity.WorkSchedule;
+import flab.gotable.domain.entity.*;
+import flab.gotable.dto.response.StoreDetailsResponseDto;
+import flab.gotable.exception.ErrorCode;
+import flab.gotable.exception.StoreNotFoundException;
 import flab.gotable.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,84 +19,105 @@ public class StoreService {
     private final StoreMapper storeMapper;
 
     @Transactional
-    public boolean getStoreById(Long id) {
+    public boolean existById(Long id) {
         return storeMapper.findStoreById(id) != null;
     }
 
     @Transactional
-    public Map<String, Object> getStoreDetail(Long id) {
+    public StoreDetailsResponseDto getStoreDetail(Long id) {
         // 식당 기본 정보 조회
-        Store store = storeMapper.findStoreById(id);
+        final Store store = Optional.ofNullable(storeMapper.findStoreById(id)).orElseThrow(() -> new StoreNotFoundException(ErrorCode.STORE_NOT_FOUND, ErrorCode.STORE_NOT_FOUND.getMessage()));
 
         // 영업 스케줄 정보 조회
-        List<DailySchedule> dailySchedules = storeMapper.findDailyScheduleByStoreId(id);
-        List<SpecificSchedule> specificSchedules = storeMapper.findSpecificScheduleByStoreId(id);
+        final List<DailySchedule> dailySchedules = storeMapper.findDailyScheduleByStoreId(id);
+        final List<SpecificSchedule> specificSchedules = storeMapper.findSpecificScheduleByStoreId(id);
 
         // 예약 가능 날짜
-        Map<String, Object> availableDays = new LinkedHashMap<>();
+        Map<String, DayInfo> availableDays = new HashMap<>();
         int daysAdded = 0;
 
         for (int i = 0; daysAdded < store.getMaxAvailableDay(); i++) {
             LocalDate targetDate = LocalDate.now().plusDays(i);
 
-            // 특수 영업 스케줄 확인
-            SpecificSchedule specificSchedule = specificSchedules.stream()
-                    .filter(s -> s.getDate().equals(targetDate))
-                    .findFirst()
-                    .orElse(null);
-
             // 해당 날짜의 영업 스케줄 결정
-            WorkSchedule workSchedule;
-            String splitTime;
-            if (specificSchedule != null) {
-                workSchedule = new WorkSchedule(specificSchedule.getOpenTime(), specificSchedule.getCloseTime());
-                splitTime = specificSchedule.getSplitTime();
+            final WorkSchedule workSchedule = getWorkSchedule(targetDate, specificSchedules, dailySchedules);
+            final String splitTime = getSplitTime(targetDate, specificSchedules, dailySchedules);
+
+            if (workSchedule != null && splitTime != null) {
                 daysAdded++;
-            } else {
-                DailySchedule dailySchedule = dailySchedules.stream()
-                        .filter(d -> d.getDay().equalsIgnoreCase(targetDate.getDayOfWeek().name()))
-                        .findFirst()
-                        .orElse(null);
+                // 선택 가능 시간 계산
+                List<String> selectableTimes = calculateSelectableTimes(workSchedule, splitTime);
 
-                if (dailySchedule != null) {
-                    workSchedule = new WorkSchedule(dailySchedule.getOpenTime(), dailySchedule.getCloseTime());
-                    splitTime = dailySchedule.getSplitTime();
-                    daysAdded++;
-                } else {
-                    continue; // 해당 요일에 일반 영업 스케줄이 없으면 다음 날로 넘어감
-                }
+                // 사용 가능 날짜 추가
+                DayInfo dayInfo = new DayInfo(workSchedule, selectableTimes);
+                availableDays.put(targetDate.toString(), dayInfo);
             }
-
-            // 선택 가능 시간 계산
-            List<String> selectableTimes = calculateSelectableTimes(workSchedule, splitTime);
-
-            // 사용 가능 날짜 추가
-            Map<String, Object> dayInfo = new HashMap<>();
-            dayInfo.put("workSchedule", workSchedule);
-            dayInfo.put("selectableTimes", selectableTimes);
-
-            availableDays.put(targetDate.toString(), dayInfo);
         }
 
-        store.setAvailableDays(availableDays);
-        store.setOpenSchedule(calculateOpenSchedule(dailySchedules));
+        String openSchedule = calculateOpenSchedule(dailySchedules);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("store", store);
+        return new StoreDetailsResponseDto(
+                store.getId(),
+                store.getName(),
+                store.getAddress(),
+                store.getMaxMemberCount(),
+                store.getMaxAvailableDay(),
+                openSchedule,
+                availableDays
+        );
+    }
 
-        return result;
+    private WorkSchedule getWorkSchedule(LocalDate targetDate, List<SpecificSchedule> specificSchedules, List<DailySchedule> dailySchedules) {
+        final SpecificSchedule specificSchedule = findSpecificSchedule(targetDate, specificSchedules);
+
+        if (specificSchedule != null) {
+            return new WorkSchedule(specificSchedule.getOpenTime(), specificSchedule.getCloseTime());
+        } else {
+            final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
+
+            if (dailySchedule != null) {
+                return new WorkSchedule(dailySchedule.getOpenTime(), dailySchedule.getCloseTime());
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private String getSplitTime(LocalDate targetDate, List<SpecificSchedule> specificSchedules, List<DailySchedule> dailySchedules) {
+        final SpecificSchedule specificSchedule = findSpecificSchedule(targetDate, specificSchedules);
+
+        if (specificSchedule != null) {
+            return specificSchedule.getSplitTime();
+        } else {
+            final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
+
+            if (dailySchedule != null) {
+                return dailySchedule.getSplitTime();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private SpecificSchedule findSpecificSchedule(LocalDate targetDate, List<SpecificSchedule> specificSchedules) {
+        return specificSchedules.stream()
+                .filter(s -> s.getDate().equals(targetDate))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private DailySchedule findDailySchedule(LocalDate targetDate, List<DailySchedule> dailySchedules) {
+        return dailySchedules.stream()
+                .filter(d -> d.getDay().equalsIgnoreCase(targetDate.getDayOfWeek().name()))
+                .findFirst()
+                .orElse(null);
     }
 
     private String calculateOpenSchedule(List<DailySchedule> dailySchedules) {
         StringBuilder openSchedule = new StringBuilder();
 
         for (DailySchedule schedule : dailySchedules) {
-            openSchedule.append(schedule.getDay())
-                    .append(" ")
-                    .append(schedule.getOpenTime())
-                    .append(" ~ ")
-                    .append(schedule.getCloseTime())
-                    .append(", ");
+            openSchedule.append(String.format("%s %s ~ %s, ", schedule.getDay(), schedule.getOpenTime(), schedule.getCloseTime()));
         }
 
         if (openSchedule.length() > 0) {
@@ -108,8 +129,8 @@ public class StoreService {
 
     private List<String> calculateSelectableTimes(WorkSchedule workSchedule, String splitTime) {
         List<String> times = new ArrayList<>();
-        LocalTime openTime = LocalTime.parse(workSchedule.getOpen());
-        LocalTime closeTime = LocalTime.parse(workSchedule.getClose());
+        LocalTime openTime = workSchedule.getOpenTime();
+        LocalTime closeTime = workSchedule.getCloseTime();
 
         int interval = Integer.parseInt(splitTime);
 
