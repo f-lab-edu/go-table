@@ -13,8 +13,8 @@ public class Store {
     private Long id;
     private String name;
     private String address;
-    private int maxMemberCount;
-    private int maxAvailableDay;
+    private long maxMemberCount;
+    private long maxAvailableDay;
     private String openSchedule;
-    private Map<String, Object> availableDays;
+    private Map<String, DayInfo> availableDays;
 }
