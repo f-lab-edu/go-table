@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -47,8 +47,8 @@ public class StoreAPIControllerTest {
                             public List<DailySchedule> findDailyScheduleByStoreId(Long id) {
                                 if (id == 1L) {
                                     return Arrays.asList(
-                                            new DailySchedule("MONDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60"),
-                                            new DailySchedule("TUESDAY", LocalTime.parse("09:00"), LocalTime.parse("18:00"), "60")
+                                            new DailySchedule(DayOfWeek.MONDAY, LocalTime.parse("09:00"), LocalTime.parse("18:00"), 60L),
+                                            new DailySchedule(DayOfWeek.TUESDAY, LocalTime.parse("09:00"), LocalTime.parse("18:00"), 60L)
                                     );
                                 }
                                 return Collections.emptyList();
@@ -58,7 +58,7 @@ public class StoreAPIControllerTest {
                             public List<SpecificSchedule> findSpecificScheduleByStoreId(Long id) {
                                 if (id == 1L) {
                                     return Arrays.asList(
-                                            new SpecificSchedule(LocalDate.of(2024, 7, 12), LocalTime.parse("10:00"), LocalTime.parse("15:00"), "60")
+                                            new SpecificSchedule(LocalDate.of(2024, 7, 12), LocalTime.parse("10:00"), LocalTime.parse("15:00"), 60L)
                                     );
                                 }
                                 return Collections.emptyList();
