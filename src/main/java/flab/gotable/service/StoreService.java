@@ -124,7 +124,7 @@ public class StoreService {
             openSchedule.append(String.format("%s %s ~ %s, ", schedule.getDay(), schedule.getOpenTime(), schedule.getCloseTime()));
         }
 
-        if (openSchedule.length() > 0) {
+        if (!openSchedule.isEmpty()) {
             openSchedule.setLength(openSchedule.length() - 2);
         }
 
