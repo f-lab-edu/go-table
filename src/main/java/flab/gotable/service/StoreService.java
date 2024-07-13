@@ -6,9 +6,12 @@ import flab.gotable.exception.ErrorCode;
 import flab.gotable.exception.StoreNotFoundException;
 import flab.gotable.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -41,7 +44,7 @@ public class StoreService {
 
             // 해당 날짜의 영업 스케줄 결정
             final WorkSchedule workSchedule = getWorkSchedule(targetDate, specificSchedules, dailySchedules);
-            final String splitTime = getSplitTime(targetDate, specificSchedules, dailySchedules);
+            final Long splitTime = getSplitTime(targetDate, specificSchedules, dailySchedules);
 
             if (workSchedule != null && splitTime != null) {
                 daysAdded++;
@@ -67,36 +70,34 @@ public class StoreService {
         );
     }
 
+    @Nullable
     private WorkSchedule getWorkSchedule(LocalDate targetDate, List<SpecificSchedule> specificSchedules, List<DailySchedule> dailySchedules) {
         final SpecificSchedule specificSchedule = findSpecificSchedule(targetDate, specificSchedules);
-
         if (specificSchedule != null) {
             return new WorkSchedule(specificSchedule.getOpenTime(), specificSchedule.getCloseTime());
-        } else {
-            final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
-
-            if (dailySchedule != null) {
-                return new WorkSchedule(dailySchedule.getOpenTime(), dailySchedule.getCloseTime());
-            } else {
-                return null;
-            }
         }
+
+        final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
+        if (dailySchedule != null) {
+            return new WorkSchedule(dailySchedule.getOpenTime(), dailySchedule.getCloseTime());
+        }
+
+        return null;
     }
 
-    private String getSplitTime(LocalDate targetDate, List<SpecificSchedule> specificSchedules, List<DailySchedule> dailySchedules) {
+    @Nullable
+    private Long getSplitTime(LocalDate targetDate, List<SpecificSchedule> specificSchedules, List<DailySchedule> dailySchedules) {
         final SpecificSchedule specificSchedule = findSpecificSchedule(targetDate, specificSchedules);
-
         if (specificSchedule != null) {
             return specificSchedule.getSplitTime();
-        } else {
-            final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
-
-            if (dailySchedule != null) {
-                return dailySchedule.getSplitTime();
-            } else {
-                return null;
-            }
         }
+
+        final DailySchedule dailySchedule =findDailySchedule(targetDate, dailySchedules);
+        if (dailySchedule != null) {
+            return dailySchedule.getSplitTime();
+        }
+
+        return null;
     }
 
     @Nullable
@@ -107,9 +108,11 @@ public class StoreService {
                 .orElse(null);
     }
 
+    @Nullable
     private DailySchedule findDailySchedule(LocalDate targetDate, List<DailySchedule> dailySchedules) {
+        DayOfWeek targetDay = targetDate.getDayOfWeek();
         return dailySchedules.stream()
-                .filter(d -> d.getDay().equalsIgnoreCase(targetDate.getDayOfWeek().name()))
+                .filter(d -> d.getDay() == targetDay)
                 .findFirst()
                 .orElse(null);
     }
@@ -128,16 +131,16 @@ public class StoreService {
         return openSchedule.toString();
     }
 
-    private List<String> calculateSelectableTimes(WorkSchedule workSchedule, String splitTime) {
+    private List<String> calculateSelectableTimes(WorkSchedule workSchedule, Long splitTime) {
         List<String> times = new ArrayList<>();
         LocalTime openTime = workSchedule.getOpenTime();
         LocalTime closeTime = workSchedule.getCloseTime();
 
-        int interval = Integer.parseInt(splitTime);
+        final Duration interval = Duration.ofMinutes(splitTime);
 
         while (openTime.isBefore(closeTime)) {
             times.add(openTime.toString());
-            openTime = openTime.plusMinutes(interval);
+            openTime = openTime.plus(interval);
         }
 
         return times;

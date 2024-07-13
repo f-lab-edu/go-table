@@ -15,9 +15,9 @@ public class SpecificSchedule {
     private LocalDate date;
     private LocalTime openTime;
     private LocalTime closeTime;
-    private String splitTime;
+    private Long splitTime;
 
-    public SpecificSchedule(LocalDate date, LocalTime openTime, LocalTime closeTime, String splitTime) {
+    public SpecificSchedule(LocalDate date, LocalTime openTime, LocalTime closeTime, Long splitTime) {
         this.date = date;
         this.openTime = openTime;
         this.closeTime = closeTime;
