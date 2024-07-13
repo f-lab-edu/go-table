@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.DayOfWeek;
 import java.time.LocalTime;
 
 @NoArgsConstructor
@@ -11,12 +12,12 @@ import java.time.LocalTime;
 @Setter
 public class DailySchedule {
     private Long id;
-    private String day;
+    private DayOfWeek day;
     private LocalTime openTime;
     private LocalTime closeTime;
-    private String splitTime;
+    private Long splitTime;
 
-    public DailySchedule(String day, LocalTime openTime, LocalTime closeTime, String splitTime) {
+    public DailySchedule(DayOfWeek day, LocalTime openTime, LocalTime closeTime, Long splitTime) {
         this.day = day;
         this.openTime = openTime;
         this.closeTime = closeTime;
