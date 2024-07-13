@@ -99,6 +99,7 @@ public class StoreService {
         }
     }
 
+    @Nullable
     private SpecificSchedule findSpecificSchedule(LocalDate targetDate, List<SpecificSchedule> specificSchedules) {
         return specificSchedules.stream()
                 .filter(s -> s.getDate().equals(targetDate))
