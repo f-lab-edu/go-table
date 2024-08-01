@@ -30,7 +30,7 @@ public class ReservationService {
         final LocalDateTime reservationEndTime = reservationRequestDto.getReservationEndTime();
 
         // 락 획득 여부
-        if(reservationMapper.selectRestaurantForUpdate(reservationRequestDto.getRestaurantId()) > 0) {
+        if(reservationMapper.getRestaurantLock(reservationRequestDto.getRestaurantId()) > 0) {
             // 예약하려는 시간에 다른 사용자가 예약하지 않았는지
             if (!isReservationAvailable(restaurantId, reservationStartTime, reservationEndTime)) {
                 throw new DuplicatedReservationException(ErrorCode.DUPLICATED_RESERVATION_TIME, ErrorCode.DUPLICATED_RESERVATION_TIME.getMessage());

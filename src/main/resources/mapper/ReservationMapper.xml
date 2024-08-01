@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="flab.gotable.mapper.ReservationMapper">
-    <select id="selectRestaurantForUpdate" resultType="Integer">
+    <select id="getRestaurantLock" resultType="Integer">
         SELECT COUNT(*)
         FROM restaurant
         WHERE id = #{restaurantId}

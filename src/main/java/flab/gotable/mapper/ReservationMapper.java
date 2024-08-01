@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Mapper
 public interface ReservationMapper {
-    public int selectRestaurantForUpdate(Long restaurantId);
+    public int getRestaurantLock(Long restaurantId);
 
     public boolean isExistDailySchedule(@Param("restaurantId") Long restaurantId,
                                         @Param("dayOfWeek") String dayOfWeek,
