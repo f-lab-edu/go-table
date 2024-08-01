@@ -16,7 +16,7 @@ public enum ErrorCode {
     STORE_NOT_FOUND(HttpStatus.BAD_REQUEST, "존재하지 않는 식당 id입니다."),
     DUPLICATED_RESERVATION_TIME(HttpStatus.BAD_REQUEST, "해당 시간을 포함한 예약 내역이 존재합니다."),
     RESERVATION_TIME_NOT_FOUND(HttpStatus.BAD_REQUEST, "예약하고자 하는 시간이 일반/특수 영업 스케줄에 존재하지 않습니다."),
-    RESERVATION_FAILED(HttpStatus.CONFLICT, "예약에 실패했습니다.");
+    RESERVATION_FAILED(HttpStatus.BAD_REQUEST, "예약에 실패했습니다.");
 
     private HttpStatus httpStatus;
     private String message;
