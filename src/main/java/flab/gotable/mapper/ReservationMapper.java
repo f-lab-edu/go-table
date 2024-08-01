@@ -11,7 +11,20 @@ import java.util.Date;
 @Mapper
 public interface ReservationMapper {
     public int selectRestaurantForUpdate(Long restaurantId);
-    public boolean isExistSchedule(Long restaurantId, @Param("date") Date startDate, Time startTime, Time endTime, String scheduleType);
-    public boolean isDuplicatedReservation(Long restaurantId, Timestamp reservationStartTime, Timestamp reservationEndTime);
+
+    public boolean isExistDailySchedule(@Param("restaurantId") Long restaurantId,
+                                        @Param("dayOfWeek") String dayOfWeek,
+                                        @Param("startTime") Time startTime,
+                                        @Param("endTime") Time endTime);
+
+    public boolean isExistSpecificSchedule(@Param("restaurantId") Long restaurantId,
+                                           @Param("date") Date date,
+                                           @Param("startTime") Time startTime,
+                                           @Param("endTime") Time endTime);
+
+    public boolean isDuplicatedReservation(@Param("restaurantId") Long restaurantId,
+                                           @Param("reservationStartTime") Timestamp reservationStartTime,
+                                           @Param("reservationEndTime") Timestamp reservationEndTime);
+
     public void saveReservation(Reservation reservation);
 }

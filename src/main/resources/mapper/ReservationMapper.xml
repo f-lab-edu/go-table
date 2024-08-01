@@ -9,20 +9,22 @@
         FOR UPDATE
     </select>
 
-    <select id="isExistSchedule" resultType="boolean">
+    <select id="isExistDailySchedule" resultType="boolean">
         SELECT IF(COUNT(*) > 0, true, false)
-        <choose>
-            <when test="scheduleType == 'daily'">
-                FROM daily_schedule
-            </when>
-            <when test="scheduleType == 'specific'">
-                FROM specific_schedule
-            </when>
-        </choose>
+        FROM daily_schedule
         WHERE id = #{restaurantId}
-        <if test="scheduleType == 'specific'">
-            AND date = #{date}
-        </if>
+        AND day = #{dayOfWeek}
+        AND open_time &lt;= #{startTime}
+        AND close_time &gt;= #{endTime}
+    </select>
+
+    <select id="isExistSpecificSchedule" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM specific_schedule
+        WHERE id = #{restaurantId}
+        AND date = #{date}
+        AND open_time &lt;= #{startTime}
+        AND close_time &gt;= #{endTime}
     </select>
 
     <select id="isDuplicatedReservation" resultType="boolean">
@@ -32,8 +34,8 @@
         AND (reservation_start_at &lt; #{reservationEndTime} AND reservation_end_at &gt; #{reservationStartTime})
     </select>
 
-    <insert id="saveReservation">
-        INSERT INTO reservation (member_seq, restaurant_id, reservation_at, member_count)
-        VALUES (#{memberSeq}, #{storeId}, #{reservationTime}, #{memberCount})
+    <insert id="saveReservation" parameterType="flab.gotable.domain.entity.Reservation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reservation (seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
+        VALUES (#{seq}, #{restaurantId}, #{status}, #{memberCount}, now(), #{reservationStartAt}, #{reservationEndAt})
     </insert>
 </mapper>

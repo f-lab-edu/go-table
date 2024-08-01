@@ -16,6 +16,7 @@ public class Reservation {
     private String status;
     private Long memberCount;
     private Timestamp createdAt;
-    private Timestamp reservationAt;
+    private Timestamp reservationStartAt;
+    private Timestamp reservationEndAt;
     private String cancelReason;
 }
