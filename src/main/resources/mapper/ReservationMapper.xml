@@ -36,6 +36,6 @@
 
     <insert id="saveReservation" parameterType="flab.gotable.domain.entity.Reservation" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO reservation (seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
-        VALUES (#{seq}, #{restaurantId}, #{status}, #{memberCount}, now(), #{reservationStartAt}, #{reservationEndAt})
+        VALUES (#{memberSeq}, #{restaurantId}, #{status}, #{memberCount}, now(), #{reservationStartAt}, #{reservationEndAt})
     </insert>
 </mapper>

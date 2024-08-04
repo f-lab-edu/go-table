@@ -4,22 +4,22 @@ import flab.gotable.domain.entity.Reservation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Getter
 public class ReservationResponseDto {
-    private Long reservationId;
-    private Long restaurantId;
-    private Long memberSeq;
-    private Timestamp reservationStartTime;
-    private Timestamp reservationEndTime;
-    private Long memberCount;
+    private long reservationId;
+    private long restaurantId;
+    private long memberSeq;
+    private LocalDateTime reservationStartTime;
+    private LocalDateTime reservationEndTime;
+    private long memberCount;
 
     public ReservationResponseDto(Reservation reservation) {
         this.reservationId = reservation.getId();
         this.restaurantId = reservation.getRestaurantId();
-        this.memberSeq = reservation.getSeq();
+        this.memberSeq = reservation.getMemberSeq();
         this.reservationStartTime = reservation.getReservationStartAt();
         this.reservationEndTime = reservation.getReservationEndAt();
         this.memberCount = reservation.getMemberCount();

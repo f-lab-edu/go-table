@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +22,7 @@ public class ReservationService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public ReservationResponseDto reserve(ReservationRequestDto reservationRequestDto) {
-        final Long restaurantId = reservationRequestDto.getRestaurantId();
+        final long restaurantId = reservationRequestDto.getRestaurantId();
         final LocalDateTime reservationStartTime = reservationRequestDto.getReservationStartTime();
         final LocalDateTime reservationEndTime = reservationRequestDto.getReservationEndTime();
 
@@ -50,21 +47,15 @@ public class ReservationService {
         throw new ReservationFailedException(ErrorCode.RESERVATION_FAILED, ErrorCode.RESERVATION_FAILED.getMessage());
     }
 
-    private boolean isReservationAvailable(Long restaurantId, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime) {
-        final Timestamp startTime = Timestamp.valueOf(reservationStartTime);
-        final Timestamp endTime = Timestamp.valueOf(reservationEndTime);
-
-        return !reservationMapper.isDuplicatedReservation(restaurantId, startTime, endTime);
+    private boolean isReservationAvailable(long restaurantId, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime) {
+        return !reservationMapper.isDuplicatedReservation(restaurantId, reservationStartTime, reservationEndTime);
     }
 
-    private boolean isExistSchedule(Long restaurantId, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime) {
-        final Date date = java.sql.Date.valueOf(reservationStartTime.toLocalDate());
-        final Time startTime = java.sql.Time.valueOf(reservationStartTime.toLocalTime());
-        final Time endTime = java.sql.Time.valueOf(reservationEndTime.toLocalTime());
+    private boolean isExistSchedule(long restaurantId, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime) {
         final String dayOfWeek = reservationStartTime.getDayOfWeek().toString();
 
-        boolean isExistDailySchedule = reservationMapper.isExistDailySchedule(restaurantId, dayOfWeek, startTime, endTime);
-        boolean isExistSpecificSchedule = reservationMapper.isExistSpecificSchedule(restaurantId, date, startTime, endTime);
+        boolean isExistDailySchedule = reservationMapper.isExistDailySchedule(restaurantId, dayOfWeek, reservationStartTime.toLocalTime(), reservationEndTime.toLocalTime());
+        boolean isExistSpecificSchedule = reservationMapper.isExistSpecificSchedule(restaurantId, reservationStartTime.toLocalDate(), reservationStartTime.toLocalTime(), reservationEndTime.toLocalTime());
 
         return isExistDailySchedule || isExistSpecificSchedule;
     }

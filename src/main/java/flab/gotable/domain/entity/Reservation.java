@@ -4,19 +4,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class Reservation {
-    private Long id;
-    private Long seq;
-    private Long restaurantId;
+    private long id;
+    private long memberSeq;
+    private long restaurantId;
     private String status;
-    private Long memberCount;
-    private Timestamp createdAt;
-    private Timestamp reservationStartAt;
-    private Timestamp reservationEndAt;
+    private long memberCount;
+    private LocalDateTime createdAt;
+    private LocalDateTime reservationStartAt;
+    private LocalDateTime reservationEndAt;
     private String cancelReason;
 }
