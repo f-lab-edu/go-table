@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +53,12 @@ public class ReservationService {
     }
 
     private boolean isExistSchedule(long restaurantId, LocalDateTime reservationStartTime, LocalDateTime reservationEndTime) {
+        final LocalTime startTime = reservationStartTime.toLocalTime();
+        final LocalTime endTime = reservationEndTime.toLocalTime();
         final String dayOfWeek = reservationStartTime.getDayOfWeek().toString();
 
-        boolean isExistDailySchedule = reservationMapper.isExistDailySchedule(restaurantId, dayOfWeek, reservationStartTime.toLocalTime(), reservationEndTime.toLocalTime());
-        boolean isExistSpecificSchedule = reservationMapper.isExistSpecificSchedule(restaurantId, reservationStartTime.toLocalDate(), reservationStartTime.toLocalTime(), reservationEndTime.toLocalTime());
+        boolean isExistDailySchedule = reservationMapper.isExistDailySchedule(restaurantId, dayOfWeek, startTime, endTime);
+        boolean isExistSpecificSchedule = reservationMapper.isExistSpecificSchedule(restaurantId, reservationStartTime.toLocalDate(), startTime, endTime);
 
         return isExistDailySchedule || isExistSpecificSchedule;
     }

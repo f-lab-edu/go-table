@@ -2,11 +2,9 @@ package flab.gotable.dto.response;
 
 import flab.gotable.domain.entity.Reservation;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
-@RequiredArgsConstructor
 @Getter
 public class ReservationResponseDto {
     private long reservationId;
