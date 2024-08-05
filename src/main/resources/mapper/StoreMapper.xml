@@ -4,19 +4,19 @@
 <mapper namespace="flab.gotable.mapper.StoreMapper">
     <select id="findStoreById" resultType="flab.gotable.domain.entity.Store">
         SELECT id, name, address, max_member_count, max_available_day
-        FROM RESTAURANT
+        FROM restaurant
         WHERE id = #{id}
     </select>
 
     <select id="findDailyScheduleByStoreId" resultType="flab.gotable.domain.entity.DailySchedule">
         SELECT id, day, open_time, close_time, split_time
-        FROM DAILY_SCHEDULE
+        FROM daily_schedule
         WHERE id = #{id}
     </select>
 
     <select id="findSpecificScheduleByStoreId" resultType="flab.gotable.domain.entity.SpecificSchedule">
         SELECT id, date, open_time, close_time, split_time
-        FROM SPECIFIC_SCHEDULE
+        FROM specific_schedule
         WHERE id = #{id}
     </select>
 </mapper>

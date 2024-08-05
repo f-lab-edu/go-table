@@ -25,7 +25,10 @@ public class ExceptionController {
             DuplicatedIdException.class,
             MemberNotFoundException.class,
             UnAuthenticatedException.class,
-            StoreNotFoundException.class
+            StoreNotFoundException.class,
+            DuplicatedReservationException.class,
+            ScheduleNotFoundException.class,
+            LockFailureException.class
     })
     public ResponseEntity<ApiResponse> handleApplicationException(ApplicationException e) {
         log.error("handle" + e.getClass());

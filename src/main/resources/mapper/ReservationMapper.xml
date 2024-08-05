@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="flab.gotable.mapper.ReservationMapper">
+    <select id="getRestaurantLock" resultType="Integer">
+        SELECT COUNT(*)
+        FROM restaurant
+        WHERE id = #{restaurantId}
+        FOR UPDATE
+    </select>
+
+    <select id="isExistDailySchedule" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM daily_schedule
+        WHERE id = #{restaurantId}
+        AND day = #{dayOfWeek}
+        AND open_time &lt;= #{startTime}
+        AND close_time &gt;= #{endTime}
+    </select>
+
+    <select id="isExistSpecificSchedule" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM specific_schedule
+        WHERE id = #{restaurantId}
+        AND date = #{date}
+        AND open_time &lt;= #{startTime}
+        AND close_time &gt;= #{endTime}
+    </select>
+
+    <select id="isDuplicatedReservation" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM reservation
+        WHERE restaurant_id = #{restaurantId}
+        AND (reservation_start_at &lt; #{reservationEndTime} AND reservation_end_at &gt; #{reservationStartTime})
+    </select>
+
+    <insert id="saveReservation" parameterType="flab.gotable.domain.entity.Reservation" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO reservation (seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
+        VALUES (#{memberSeq}, #{restaurantId}, #{status}, #{memberCount}, now(), #{reservationStartAt}, #{reservationEndAt})
+    </insert>
+</mapper>
