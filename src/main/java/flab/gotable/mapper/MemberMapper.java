@@ -12,4 +12,6 @@ public interface MemberMapper {
     public boolean existId(String id);
 
     public Member findMemberById(String id);
+
+    public boolean isMemberExistSeq(long seq);
 }
