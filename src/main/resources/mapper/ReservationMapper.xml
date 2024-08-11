@@ -34,6 +34,7 @@
         FROM reservation
         WHERE restaurant_id = #{restaurantId}
         AND (reservation_start_at &lt; #{reservationEndTime} AND reservation_end_at &gt; #{reservationStartTime})
+        FOR SHARE
     </select>
 
     <insert id="saveReservation" parameterType="flab.gotable.domain.entity.Reservation" useGeneratedKeys="true" keyProperty="id">

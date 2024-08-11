@@ -78,24 +78,24 @@ public class ReservationService {
     private void checkMemberCount(long restaurantId, long memberCount) {
         // 예약 인원 수가 0 이하일 경우
         if(memberCount <= 0) {
-            throw new InvalidReservationException(ErrorCode.INVALID_MAX_MEMBER_COUNT, ErrorCode.INVALID_MAX_MEMBER_COUNT.getMessage());
+            throw new InvalidReservationMemberCountException(ErrorCode.INVALID_MAX_MEMBER_COUNT, ErrorCode.INVALID_MAX_MEMBER_COUNT.getMessage());
         }
         
         // 예약 인원 수가 예약 가능 최대 인원 수를 초과했을 경우
         if(memberCount > storeMapper.getMaxMemberCount(restaurantId)) {
-            throw new InvalidReservationException(ErrorCode.EXCEEDS_MAX_MEMBER_COUNT, ErrorCode.EXCEEDS_MAX_MEMBER_COUNT.getMessage());
+            throw new InvalidReservationMemberCountException(ErrorCode.EXCEEDS_MAX_MEMBER_COUNT, ErrorCode.EXCEEDS_MAX_MEMBER_COUNT.getMessage());
         }
     }
 
     private void checkReservationTime(LocalDateTime startTime, LocalDateTime endTime) {
         // 예약 종료 시간이 예약 시작 시간보다 앞서거나 동일한 경우
         if(endTime.isBefore(startTime) || endTime.equals(startTime)) {
-            throw new InvalidReservationException(ErrorCode.INVALID_RESERVATION_TIME, ErrorCode.INVALID_RESERVATION_TIME.getMessage());
+            throw new InvalidReservationTimeException(ErrorCode.INVALID_RESERVATION_TIME, ErrorCode.INVALID_RESERVATION_TIME.getMessage());
         }
 
         // 예약 시작 시간이 현재 시간보다 이전인 경우
         if(startTime.isBefore(LocalDateTime.now())) {
-            throw new InvalidReservationException(ErrorCode.PAST_RESERVATION_TIME, ErrorCode.PAST_RESERVATION_TIME.getMessage());
+            throw new InvalidReservationTimeException(ErrorCode.PAST_RESERVATION_TIME, ErrorCode.PAST_RESERVATION_TIME.getMessage());
         }
     }
 
