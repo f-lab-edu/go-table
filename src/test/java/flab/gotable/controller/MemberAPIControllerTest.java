@@ -52,6 +52,11 @@ class MemberAPIControllerTest {
                             public Member findMemberById(String id) {
                                 return memberMap.get(id);
                             }
+
+                            @Override
+                            public boolean isMemberExistSeq(long seq) {
+                                return memberMap.containsKey(seq);
+                            }
                         }, new PasswordEncoder() {
                             @Override
                             public String encode(CharSequence rawPassword) {

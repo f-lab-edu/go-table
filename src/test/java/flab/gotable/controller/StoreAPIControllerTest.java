@@ -63,6 +63,16 @@ public class StoreAPIControllerTest {
                                 }
                                 return Collections.emptyList();
                             }
+
+                            @Override
+                            public boolean isRestaurantExistId(long restaurantId) {
+                                return false;
+                            }
+
+                            @Override
+                            public long getMaxMemberCount(long restaurantId) {
+                                return 0;
+                            }
                         }
                 )
         );
