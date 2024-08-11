@@ -29,7 +29,8 @@ public class ExceptionController {
             DuplicatedReservationException.class,
             ScheduleNotFoundException.class,
             LockFailureException.class,
-            InvalidReservationException.class
+            InvalidReservationTimeException.class,
+            InvalidReservationMemberCountException.class
     })
     public ResponseEntity<ApiResponse> handleApplicationException(ApplicationException e) {
         log.error("handle" + e.getClass());
