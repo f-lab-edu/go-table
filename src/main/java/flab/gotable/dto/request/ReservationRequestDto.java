@@ -31,7 +31,7 @@ public class ReservationRequestDto {
 
         reservation.setMemberSeq(reservationRequestDto.memberSeq);
         reservation.setRestaurantId(reservationRequestDto.restaurantId);
-        reservation.setStatus(StatusCode.SUCCESS.getValue());
+        reservation.setStatus(StatusCode.SUCCESS.name());
         reservation.setMemberCount(reservationRequestDto.memberCount);
         reservation.setReservationStartAt(reservationRequestDto.reservationStartTime);
         reservation.setReservationEndAt(reservationRequestDto.reservationEndTime);

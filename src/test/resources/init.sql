@@ -64,10 +64,10 @@ VALUES
 
 INSERT INTO reservation(member_seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
 VALUES
-(1, 1, 'success', 3, NOW(), '2024-08-13 11:00:00', '2024-08-13 12:00:00'),
-(1, 2, 'success', 5, NOW(), '2024-08-13 12:00:00', '2024-08-13 12:30:00'),
-(2, 1, 'success', 2, NOW(), '2024-08-15 10:00:00', '2024-08-15 11:00:00'),
-(2, 2, 'success', 1, NOW(), '2024-08-15 11:00:00', '2024-08-15 12:00:00');
+(1, 1, 'SUCCESS', 3, NOW(), '2024-08-13 11:00:00', '2024-08-13 12:00:00'),
+(1, 2, 'SUCCESS', 5, NOW(), '2024-08-13 12:00:00', '2024-08-13 12:30:00'),
+(2, 1, 'SUCCESS', 2, NOW(), '2024-08-15 10:00:00', '2024-08-15 11:00:00'),
+(2, 2, 'SUCCESS', 1, NOW(), '2024-08-15 11:00:00', '2024-08-15 12:00:00');
 
 INSERT INTO restaurant(name, address, latitude, longitude, max_member_count, max_available_day)
 VALUES
