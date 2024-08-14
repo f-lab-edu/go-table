@@ -6,7 +6,6 @@ import flab.gotable.exception.*;
 import flab.gotable.mapper.MemberMapper;
 import flab.gotable.mapper.ReservationMapper;
 import flab.gotable.mapper.StoreMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -50,13 +49,16 @@ class ReservationServiceTest {
     @Autowired
     private StoreMapper storeMapper;
 
+    @Autowired
+    private ReservationService reservationService;
+
     @Test
     @DisplayName("존재하지 않는 회원 seq로 예약하는 경우 MemberNotFoundException 예외를 발생시킨다.")
     void reserveNotExistMember() {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 99L, LocalDateTime.of(2024, 8, 14, 10, 0), LocalDateTime.of(2023, 8, 14, 11, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(MemberNotFoundException.class, () -> { reservationService.reserve(requestDto); });
@@ -68,7 +70,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(351L, 1L, LocalDateTime.of(2024, 8, 14, 10, 0), LocalDateTime.of(2024, 8, 14, 11, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(StoreNotFoundException.class, () -> { reservationService.reserve(requestDto); });
@@ -80,7 +82,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 1L, LocalDateTime.of(2024, 8, 14, 10, 0), LocalDateTime.of(2024, 8, 14, 11, 0), 0L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(InvalidReservationMemberCountException.class, () -> { reservationService.reserve(requestDto); });
@@ -92,7 +94,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 1L, LocalDateTime.of(2024, 8, 14, 10, 0), LocalDateTime.of(2024, 8, 14, 11, 0), 99L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(InvalidReservationMemberCountException.class, () -> { reservationService.reserve(requestDto); });
@@ -104,7 +106,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 1L, LocalDateTime.of(2024, 8, 14, 10, 0), LocalDateTime.of(2024, 8, 14, 9, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(InvalidReservationTimeException.class, () -> { reservationService.reserve(requestDto); });
@@ -116,7 +118,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 1L, LocalDateTime.of(2024, 1, 1, 10, 0), LocalDateTime.of(2024, 8, 14, 9, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(InvalidReservationTimeException.class, () -> { reservationService.reserve(requestDto); });
@@ -128,7 +130,7 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(2L, 2L, LocalDateTime.of(2024, 8, 15, 11, 0), LocalDateTime.of(2024, 8, 15, 12, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(DuplicatedReservationException.class, () -> { reservationService.reserve(requestDto); });
@@ -138,9 +140,9 @@ class ReservationServiceTest {
     @DisplayName("예약하는 시간이 일반 또는 특수 영업 스케줄에 존재하지 않을 경우 ScheduleNotFoundException 예외를 발생시킨다.")
     void reserveNotExistSchedule() {
         // given
-        ReservationRequestDto requestDto = new ReservationRequestDto(2L, 1L, LocalDateTime.of(2024, 8, 12, 11, 0), LocalDateTime.of(2024, 8, 12, 12, 0), 3L);
+        ReservationRequestDto requestDto = new ReservationRequestDto(2L, 1L, LocalDateTime.of(2024, 8, 14, 11, 0), LocalDateTime.of(2024, 8, 14, 12, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when, then
         Assertions.assertThrows(ScheduleNotFoundException.class, () -> { reservationService.reserve(requestDto); });
@@ -152,17 +154,19 @@ class ReservationServiceTest {
         // given
         ReservationRequestDto requestDto = new ReservationRequestDto(1L, 1L, LocalDateTime.of(2024, 8, 18, 11, 0), LocalDateTime.of(2024, 8, 18, 12, 0), 3L);
 
-        ReservationService reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
+        reservationService = new ReservationService(reservationMapper, memberMapper, storeMapper);
 
         // when
         ReservationResponseDto responseDto = reservationService.reserve(requestDto);
 
         // then
-        Assertions.assertNotNull(responseDto);
-        Assertions.assertEquals(1L, responseDto.getMemberSeq());
-        Assertions.assertEquals(1L, responseDto.getRestaurantId());
-        Assertions.assertEquals(LocalDateTime.of(2024, 8, 18, 11, 0), responseDto.getReservationStartTime());
-        Assertions.assertEquals( LocalDateTime.of(2024, 8, 18, 12, 0), responseDto.getReservationEndTime());
-        Assertions.assertEquals(3L, responseDto.getMemberCount());
+        Assertions.assertAll(
+                () -> Assertions.assertNotNull(responseDto),
+                () -> Assertions.assertEquals(1L, responseDto.getMemberSeq()),
+                () -> Assertions.assertEquals(1L, responseDto.getRestaurantId()),
+                () -> Assertions.assertEquals(LocalDateTime.of(2024, 8, 18, 11, 0), responseDto.getReservationStartTime()),
+                () -> Assertions.assertEquals(LocalDateTime.of(2024, 8, 18, 12, 0), responseDto.getReservationEndTime()),
+                () -> Assertions.assertEquals(3L, responseDto.getMemberCount())
+        );
     }
 }
