@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum StatusCode {
-    SUCCESS("success"),
-    FAILED("fail");
-
-    private final String value;
+    SUCCESS,
+    FAILED;
 }

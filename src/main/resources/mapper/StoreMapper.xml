@@ -19,4 +19,16 @@
         FROM specific_schedule
         WHERE id = #{id}
     </select>
+
+    <select id="isRestaurantExistId" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM restaurant
+        WHERE id = #{restaurantId}
+    </select>
+
+    <select id="getMaxMemberCount" resultType="long">
+        SELECT max_member_count
+        FROM restaurant
+        WHERE id = #{restaurantId}
+    </select>
 </mapper>

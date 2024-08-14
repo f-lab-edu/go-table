@@ -16,6 +16,7 @@
         AND day = #{dayOfWeek}
         AND open_time &lt;= #{startTime}
         AND close_time &gt;= #{endTime}
+        FOR SHARE
     </select>
 
     <select id="isExistSpecificSchedule" resultType="boolean">
@@ -25,6 +26,7 @@
         AND date = #{date}
         AND open_time &lt;= #{startTime}
         AND close_time &gt;= #{endTime}
+        FOR SHARE
     </select>
 
     <select id="isDuplicatedReservation" resultType="boolean">
@@ -32,10 +34,11 @@
         FROM reservation
         WHERE restaurant_id = #{restaurantId}
         AND (reservation_start_at &lt; #{reservationEndTime} AND reservation_end_at &gt; #{reservationStartTime})
+        FOR SHARE
     </select>
 
     <insert id="saveReservation" parameterType="flab.gotable.domain.entity.Reservation" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO reservation (seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
+        INSERT INTO reservation (member_seq, restaurant_id, status, member_count, created_at, reservation_start_at, reservation_end_at)
         VALUES (#{memberSeq}, #{restaurantId}, #{status}, #{memberCount}, now(), #{reservationStartAt}, #{reservationEndAt})
     </insert>
 </mapper>

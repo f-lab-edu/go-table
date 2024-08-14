@@ -12,4 +12,6 @@ public interface StoreMapper {
     public Store findStoreById(Long id);
     public List<DailySchedule> findDailyScheduleByStoreId(Long id);
     public List<SpecificSchedule> findSpecificScheduleByStoreId(Long id);
+    public boolean isRestaurantExistId(long restaurantId);
+    public long getMaxMemberCount(long restaurantId);
 }

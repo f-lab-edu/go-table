@@ -19,4 +19,10 @@
         FROM member
         WHERE ID = #{id}
     </select>
+
+    <select id="isMemberExistSeq" resultType="boolean">
+        SELECT IF(COUNT(*) > 0, true, false)
+        FROM member
+        WHERE seq = #{seq}
+    </select>
 </mapper>
