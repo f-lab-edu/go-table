@@ -1,3 +1,6 @@
+현재 `비즈니스 가치`와 `리팩토링`에 중점을 두어 프로젝트 develop을 진행하고 있습니다.  
+* https://github.com/syoh98/go-table-develop   
+
 # 🔔 go-table
 ![go_table_main_image](https://github.com/f-lab-edu/go-table/assets/76934280/8e36f47a-885e-47d1-a4e4-108f06ac928e)   
 선착순 식당 예약 서비스입니다.
@@ -27,4 +30,4 @@
 
 
 ## 📌 DB ERD
-![image](https://github.com/f-lab-edu/go-table/assets/76934280/f39dd7cc-c789-44bd-81d0-e40e2bd13257)
+![image](https://github.com/user-attachments/assets/c2e2b0be-91f6-48f5-b50e-445fa3efe13d)
